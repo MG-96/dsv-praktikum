@@ -1,4 +1,4 @@
-#[derive(Clone)]
+#[derive(Clone)]  // <-- wird glaub ich hier nicht zwingend benötigt
 pub struct UnitDelay<T: std::clone::Clone> {
     prev: T
 }
@@ -12,7 +12,7 @@ impl<T: std::clone::Clone> UnitDelay<T> {
         self.prev = x;
         return tmp
     }
-    pub fn process_ref(&mut self, x: &mut T) {
+    pub fn process_in_place(&mut self, x: &mut T) {
         let tmp = x.clone();
         *x = self.prev.clone();
         self.prev = tmp;
@@ -49,7 +49,7 @@ mod tests {
         let mut delay = super::UnitDelay{prev: 0 as i16};
         let out = delay.process(5);
         assert_eq!(out, 0);
-        let out = delay.process(5);
+        let out = delay.process(6);
         assert_eq!(out, 5);
     }
 
@@ -67,9 +67,9 @@ mod tests {
     fn name() {
         let mut delay = super::UnitDelay{prev: 0 as i16};
         let mut inout: i16 = 5;
-        delay.process_ref(&mut inout);
+        delay.process_in_place(&mut inout);
         assert_eq!(inout, 0);
-        delay.process_ref(&mut inout);
+        delay.process_in_place(&mut inout);
         assert_eq!(inout, 5);
     }
 }

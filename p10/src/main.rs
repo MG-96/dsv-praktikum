@@ -41,13 +41,13 @@ fn sinus_tests() {
 fn faltung() {
     let mut rect: Vec<f64> = Vec::new();
     
-    for _i in 0..1000 {
-        rect.push(0.0);
-    }
+    // for _i in 0..500 {
+    //     rect.push(0.0);
+    // }
     for _i in 0..100 {
         rect.push(1.0);
     }
-    for _i in 0..1000 {
+    for _i in 0..100 {
         rect.push(0.0);
     }
 
@@ -73,7 +73,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use wav::*;
 
-fn main() {
+fn sa() {
     let mut inp_file = File::open(Path::new("data/dsv-praktikum.wav")).unwrap();
     let mut out_file = File::create(Path::new("data/dsv-praktikum_spectrum.csv")).unwrap();
     let (_header, data) = wav::read(&mut inp_file).unwrap();
@@ -92,5 +92,9 @@ fn main() {
     for x in &output {
         out_file.write_all(format!("{}\n", x.to_polar().0).as_bytes()).unwrap();
     }
+}
     
+
+fn main() {
+    sa();
 }

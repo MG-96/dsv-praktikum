@@ -16,11 +16,20 @@ fn main() {
     let mut j: usize = 0;
     let k = 1;
 
-    const FSIZE: usize = 9;
-    let factor = 9;
+    let factor: i32 = 1;
+
+    mat.set(0, 0, 1);
+    mat.set(0, 1, 1);
+    mat.set(0, 2, 1);
+    mat.set(1, 0, 1);
+    mat.set(1, 1, -2);
+    mat.set(1, 2, 1);
+    mat.set(2, 0, -1);
+    mat.set(2, 1, -1);
+    mat.set(2, 2, -1);
 
     // Iterate through the matrix (row by row)
-    while i <= 2 {
+/*     while i <= 2 {
         while j <= 2 {
 
             mat.set(i as usize, j as usize, k);
@@ -28,35 +37,29 @@ fn main() {
         }
         j = 0;
         i +=1 ;
-    }
+    } */
 
     /*
     for val in mat {
         print!("{} ", val);
     } */
 
-    for (x, y) in img.coordinates() {
+/*     for (x, y) in img.coordinates() {
         outimg.set_pixel(x, y, img.get_pixel(x,y));
-    }
+    } */
 
-    let mut x_coordinate_bild = 1;
-    let mut y_coordinate_bild = 1;
-
-    let mut x_coordinate_kernel = 1;
-    let mut y_coordinate_kernel = 1;
 
     let bilbreite = outimg.get_width();
     let bildhoehe = outimg.get_height();
 
     /** (Destruktive) Bildoperation   */
-    for (x, y) in outimg.coordinates() {
+    for (x, y) in img.coordinates() {
 
-        if (x > 1) && (x < bilbreite - 5) && (y > 1) && (y < bildhoehe - 5) {
-            let mut neuer_pixel_grauwert: u32 = 0;
+        if (x > 1) && (x < bilbreite - 1) && (y > 1) && (y < bildhoehe - 1) {
+            let mut neuer_pixel_grauwert: i32 = 0;
 
             i = 0;
             j = 0;
-
 
             while i <= 2 {
 
@@ -66,12 +69,11 @@ fn main() {
                     let op2: u32 = y as u32 - j as u32;
 
                     let pixelwert = img.get_pixel(op1, op2);
-                    let mittelwert: u32 = ((pixelwert.r + pixelwert.g + pixelwert.b) / 3) as u32;
+                    let mittelwert: u8 = (pixelwert.r as f32 * 0.3 + pixelwert.g as f32 * 0.59 + pixelwert.b as f32 * 0.11) as u8;
 
                     let zwischenwert = mat.get(i, j).unwrap();
 
-                    neuer_pixel_grauwert += (mittelwert as i32 * zwischenwert) as u32;
-
+                    neuer_pixel_grauwert += (mittelwert as i32 * zwischenwert) as i32;
 
                     j += 1;
                 }
@@ -79,13 +81,13 @@ fn main() {
                 i +=1;
             }
 
-            let neuer_pixel_rgb_wert = bmp::Pixel::new(neuer_pixel_grauwert as u8 / factor, neuer_pixel_grauwert as u8 / factor, neuer_pixel_grauwert as u8 / factor);
+            let neuer_pixel_rgb_wert = bmp::Pixel::new((neuer_pixel_grauwert / factor) as u8, (neuer_pixel_grauwert / factor) as u8, (neuer_pixel_grauwert / factor) as u8);
 
             outimg.set_pixel(x, y, neuer_pixel_rgb_wert);
 
         }
     }
 
-    let _ = img.save("./data/out.bmp");
+    let _ = outimg.save("./data/out.bmp");
 
 }
